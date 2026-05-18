@@ -1,6 +1,6 @@
 # ⚡ VoltAPI
 
-> A self-hosted, open source REST API that aggregates electricity tariff data from providers worldwide — designed for Home Assistant and other smart home integrations.
+> A self-hosted, open source REST API that adds electricity tariff data from providers worldwide. Designed for Home Assistant and other smart home integrations.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
