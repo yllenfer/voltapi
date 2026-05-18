@@ -1,0 +1,11 @@
+services:
+  api:
+    build: .
+    container_name: electricity-api
+    ports:
+      - "8099:8000"       # Access at http://localhost:8099
+    volumes:
+      - ./tariffs.db:/app/tariffs.db   # persist SQLite outside container
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Madrid
