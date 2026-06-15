@@ -5,7 +5,7 @@ services:
     ports:
       - "8099:8000"       # Access at http://localhost:8099
     volumes:
-      - ./tariffs.db:/app/tariffs.db   # persist SQLite outside container
+      - ./rates.db:/app/rates.db   # persist SQLite outside container
     restart: unless-stopped
     environment:
       - TZ=Europe/Madrid

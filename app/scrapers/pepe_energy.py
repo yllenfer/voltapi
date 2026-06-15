@@ -1,7 +1,7 @@
 """
 Pepe Energy (pepeenergy.com) scraper.
 
-Pepe Energy publishes tariffs on static HTML pages — no JS rendering needed.
+Pepe Energy publishes rates on static HTML pages — no JS rendering needed.
 They offer two main tariff types:
   - Tarifa Fija: fixed flat rate, reviewed every 6 months
   - Tarifa Variable (ECO): monthly variable rate tied to wholesale market
@@ -50,7 +50,7 @@ class PepeEnergyScraper(BaseScraper):
     name = "pepe_energy"
 
     def scrape(self) -> List[ScrapedTariff]:
-        tariffs = []
+        rates = []
 
         # ── Tarifa Fija ──────────────────────────────────────────────────
         try:
@@ -58,7 +58,7 @@ class PepeEnergyScraper(BaseScraper):
             if prices:
                 # The main advertised price is typically the lowest on the page
                 # (mainland peninsula, residential <10kW, IVA 10% + IE 0.5%)
-                tariffs.append(ScrapedTariff(
+                rates.append(ScrapedTariff(
                     name="Tarifa Fija (precio plano 6 meses)",
                     kwh_price=prices[0],
                     tariff_type="fixed",
@@ -78,7 +78,7 @@ class PepeEnergyScraper(BaseScraper):
         try:
             prices = _extract_prices(VARIABLE_URL)
             if prices:
-                tariffs.append(ScrapedTariff(
+                rates.append(ScrapedTariff(
                     name="Tarifa Variable ECO (precio mensual)",
                     kwh_price=prices[0],
                     tariff_type="variable",
@@ -95,4 +95,4 @@ class PepeEnergyScraper(BaseScraper):
         except Exception as e:
             print(f"  [pepe_energy] Tarifa Variable scrape failed: {e}")
 
-        return tariffs
+        return rates

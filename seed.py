@@ -28,6 +28,13 @@ PROVIDERS = [
         scraper_id="pepe_energy",
         active=True,
     ),
+    Provider(
+        name="Endesa",
+        country="ES",
+        website="https://www.endesa.com/",
+        scraper_id="endesa",
+        active=True,
+    ),
     # Add new providers here following the same pattern
 ]
 

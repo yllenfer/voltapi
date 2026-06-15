@@ -19,17 +19,17 @@ def get_scraper(scraper_id: str) -> BaseScraper:
 
 def run_scraper(scraper_id: str, provider_id: int):
     scraper = get_scraper(scraper_id)
-    tariffs = scraper.run()
+    rates = scraper.run()
 
     with Session(engine) as session:
-        # Delete old tariffs for this provider before inserting fresh ones
+        # Delete old rates for this provider before inserting fresh ones
         old = session.exec(
             select(Tariff).where(Tariff.provider_id == provider_id)
         ).all()
         for t in old:
             session.delete(t)
 
-        for t in tariffs:
+        for t in rates:
             session.add(Tariff(
                 provider_id=provider_id,
                 name=t.name,
@@ -50,7 +50,7 @@ def run_scraper(scraper_id: str, provider_id: int):
             session.add(provider)
 
         session.commit()
-    print(f"Saved {len(tariffs)} tariffs for provider_id={provider_id}")
+    print(f"Saved {len(rates)} rates for provider_id={provider_id}")
 
 
 def run_all_scrapers():

@@ -32,7 +32,7 @@ class BaseScraper(ABC):
 
     @abstractmethod
     def scrape(self) -> List[ScrapedTariff]:
-        """Scrape and return a list of normalised tariffs."""
+        """Scrape and return a list of normalised rates."""
         ...
 
     def run(self) -> List[ScrapedTariff]:

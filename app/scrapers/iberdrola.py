@@ -25,17 +25,17 @@ class IberdrolaScraper(BaseScraper):
     name = "iberdrola"
 
     def scrape(self) -> List[ScrapedTariff]:
-        tariffs = []
+        rates = []
 
-        tariffs.extend(self._scrape_static_plans())
-        tariffs.extend(self._scrape_pvpc_today())
+        rates.extend(self._scrape_static_plans())
+        rates.extend(self._scrape_pvpc_today())
 
-        return tariffs
+        return rates
 
     # ── Plan Online & power charges from static HTML ──────────────────────
 
     def _scrape_static_plans(self) -> List[ScrapedTariff]:
-        tariffs = []
+        rates = []
         try:
             resp = requests.get(
                 IBERDROLA_URL,
@@ -66,7 +66,7 @@ class IberdrolaScraper(BaseScraper):
             prices_sorted = sorted(found_prices)
 
             if prices_sorted:
-                tariffs.append(ScrapedTariff(
+                rates.append(ScrapedTariff(
                     name="Plan Online (tarifa plana)",
                     kwh_price=prices_sorted[0],  # lowest = fixed plan
                     tariff_type="fixed",
@@ -76,7 +76,7 @@ class IberdrolaScraper(BaseScraper):
                 ))
 
             if len(prices_sorted) > 1:
-                tariffs.append(ScrapedTariff(
+                rates.append(ScrapedTariff(
                     name="Mercado Regulado (media anual)",
                     kwh_price=prices_sorted[-1],  # higher = regulated market avg
                     tariff_type="variable",
@@ -88,12 +88,12 @@ class IberdrolaScraper(BaseScraper):
         except Exception as e:
             print(f"  [iberdrola] Static HTML scrape failed: {e}")
 
-        return tariffs
+        return rates
 
     # ── PVPC hourly prices from REE ESIOS API ────────────────────────────
 
     def _scrape_pvpc_today(self) -> List[ScrapedTariff]:
-        tariffs = []
+        rates = []
         try:
             today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
             params = {
@@ -112,7 +112,7 @@ class IberdrolaScraper(BaseScraper):
             values = data.get("indicator", {}).get("values", [])
             if not values:
                 print("  [iberdrola] REE API returned no hourly values")
-                return tariffs
+                return rates
 
             # Each value: {"value": 154.79, "datetime": "2026-05-18T22:00:00Z", ...}
             # Value is in €/MWh — convert to €/kWh by dividing by 1000
@@ -130,7 +130,7 @@ class IberdrolaScraper(BaseScraper):
                 max_price = max(prices_only)
                 cheapest_hour = min(hourly_prices, key=lambda x: x[1])
 
-                tariffs.append(ScrapedTariff(
+                rates.append(ScrapedTariff(
                     name="PVPC Hoy (media horaria)",
                     kwh_price=avg,
                     tariff_type="time_of_use",
@@ -146,4 +146,4 @@ class IberdrolaScraper(BaseScraper):
         except Exception as e:
             print(f"  [iberdrola] REE API scrape failed: {e}")
 
-        return tariffs
+        return rates

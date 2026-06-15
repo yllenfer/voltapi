@@ -42,18 +42,18 @@ open http://localhost:8099/docs
 
 ## API Endpoints
 
-| Method | Path | Description |
-|--------|------|-------------|
-| `GET` | `/tariffs` | All tariffs (filterable by provider, region, max price) |
-| `GET` | `/tariffs/cheapest` | Cheapest tariff available |
-| `GET` | `/tariffs/{id}` | Single tariff |
-| `POST` | `/tariffs/refresh/{provider_id}` | Manually re-scrape a provider |
-| `GET` | `/providers` | All registered providers |
-| `GET` | `/providers/{id}` | Single provider |
-| `POST` | `/providers` | Register a new provider |
-| `GET` | `/docs` | Swagger UI (interactive) |
-| `GET` | `/redoc` | ReDoc documentation |
-| `GET` | `/health` | Health check |
+| Method | Path                           | Description                                           |
+| --------| --------------------------------| -------------------------------------------------------|
+| `GET`  | `/rates`                       | All rates (filterable by provider, region, max price) |
+| `GET`  | `/rates/cheapest`              | Cheapest tariff available                             |
+| `GET`  | `/rates/{id}`                  | Single tariff                                         |
+| `POST` | `/rates/refresh/{provider_id}` | Manually re-scrape a provider                         |
+| `GET`  | `/providers`                   | All registered providers                              |
+| `GET`  | `/providers/{id}`              | Single provider                                       |
+| `POST` | `/providers`                   | Register a new provider                               |
+| `GET`  | `/docs`                        | Swagger UI (interactive)                              |
+| `GET`  | `/redoc`                       | ReDoc documentation                                   |
+| `GET`  | `/health`                      | Health check                                          |
 
 ## Home Assistant Integration
 
@@ -62,14 +62,14 @@ open http://localhost:8099/docs
 sensor:
   - platform: rest
     name: "Electricity Price (cheapest)"
-    resource: http://YOUR_SERVER_IP:8099/tariffs/cheapest
+    resource: http://YOUR_SERVER_IP:8099/rates/cheapest
     value_template: "{{ value_json.kwh_price }}"
     unit_of_measurement: "EUR/kWh"
     scan_interval: 3600
 
   - platform: rest
     name: "Iberdrola PVPC Today"
-    resource: http://YOUR_SERVER_IP:8099/tariffs?provider_id=1
+    resource: http://YOUR_SERVER_IP:8099/rates?provider_id=1
     json_attributes_path: "$[0]"
     json_attributes:
       - kwh_price

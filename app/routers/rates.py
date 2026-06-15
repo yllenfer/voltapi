@@ -9,14 +9,14 @@ router = APIRouter()
 
 
 @router.get("/", response_model=List[Tariff])
-def list_tariffs(
+def list_rates(
     provider_id: Optional[int] = Query(None, description="Filter by provider"),
     region: Optional[str] = Query(None, description="Filter by region"),
     max_kwh_price: Optional[float] = Query(None, description="Max €/kWh"),
     session: Session = Depends(get_session),
 ):
     """
-    List current electricity tariffs.
+    List current electricity rates.
 
     Use this endpoint in Home Assistant as a REST sensor to get live pricing.
     """
@@ -41,7 +41,7 @@ def cheapest_tariff(
         query = query.where(Tariff.region == region)
     tariff = session.exec(query).first()
     if not tariff:
-        raise HTTPException(status_code=404, detail="No tariffs found")
+        raise HTTPException(status_code=404, detail="No rates found")
     return tariff
 
 
@@ -55,7 +55,7 @@ def get_tariff(tariff_id: int, session: Session = Depends(get_session)):
 
 
 @router.post("/refresh/{provider_id}", status_code=202)
-def refresh_provider_tariffs(
+def refresh_provider_rates(
     provider_id: int, session: Session = Depends(get_session)
 ):
     """Manually trigger a re-scrape for a specific provider."""
