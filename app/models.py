@@ -3,7 +3,7 @@ from typing import Optional
 from datetime import datetime
 from enum import Enum
 
-DATABASE_URL = "sqlite:///./tariffs.db"
+DATABASE_URL = "sqlite:///./rates.db"
 engine = create_engine(DATABASE_URL, echo=False)
 
 
